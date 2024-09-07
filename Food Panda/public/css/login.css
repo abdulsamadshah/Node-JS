@@ -1,0 +1,78 @@
+/* General */
+@import url('https://fonts.googleapis.com/css2?family=Poppins%3Awght%40100%3B200%3B300%3B400%3B500%3B600%3B700%3B800%3B900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+:root {
+
+    /* Background Color */
+    --bg-black-color:blue;
+    --bg-dark-blue: #0c0c0e;
+    --bg-white: #fff;
+    --primary-bg: red;
+
+    /* Text Color  */
+    --primary-font: 'Poppins', 'sans-serif';
+    --primary-text: #f1062d;
+    --text-gray: #c6c9d8bf;
+    --text-white: #fff;
+}
+
+/* input type increament and dec will be disable this code */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+.login .Register{
+    /* height: 650px; */
+    padding-top: 200px;
+    /* display: block; */
+    text-align: center;
+    /* height:100%; */
+    padding-bottom: 300px;
+    background: linear-gradient(to bottom, rgb(6, 108, 100), rgb(14, 48, 122));
+}
+.Register h1{
+    color: white;
+    font-size: 55px;
+}
+
+.Register .btn{
+    padding: 13px 71px;
+    font-size: 20px;
+}
+
+
+.login form{
+    /* padding-top: 200px; */
+}
+
+.login  input{
+    padding: 9px;
+    font-weight: 600;
+    font-size: 18px;
+    /* border: 3px solid whitesmoke; */
+}
+
+.login .login_btn{
+    padding: 13px 149px;
+    font-size: 20px;
+    background-color: rgb(14, 48, 122);
+}
+
+.login .signup_btn{
+    padding: 13px 149px;
+    font-size: 15px;
+    background-color: rgb(14, 48, 122);
+}

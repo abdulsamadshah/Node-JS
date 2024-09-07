@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Products</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="js/Product.js"> </script>
+
+
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" type="text/css" href="../src/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" type="text/css" href="../src/assets/css/style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" type="text/css" href="../src/assets/images/favicon.png" />
+    <script src="js/Dashboard.js"></script>
+    <link rel="stylesheet" href="../css/Category.css">
+</head>
+
+<body>
+
+    <div class="container-scroller">
+
+        <!-- Dashboard -->
+        <div id="header"></div>
+
+        <div class="container-fluid page-body-wrapper">
+            <div id="NavigationBar"></div>
+
+            <div class="container pt-3">
+                <a href="http://localhost:3000/AddProduct.html">
+                    <button type="button" class="btn btn-primary float-end pr-3">Add Product</button>
+                </a>
+                <section class="container">
+
+                    <table class="table table-fluid" id="myTable">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Stock Qty</th>
+                                <th>Discount</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if(result.length>0){ %>
+                                <% result.forEach(data=> { %>
+                                    <tr>
+                                        <td> <img src="/uploads/<%= data.Product_Image %>" class="product-img-top"
+                                                alt="Category Image"></td>
+                                        <td>
+                                            <%=data.Product_name %>
+                                        </td>
+                                        <td>
+                                            <%=data.Product_Price %>
+                                        </td>
+                                        <td>
+                                            <%=data.Product_Qty %>
+                                        </td>
+                                        <td>
+                                            <%=data.Product_StockQty %>
+                                        </td>
+                                        <td>
+                                            <%=data.Product_Discount %>
+                                        </td>
+                                        <td>
+                                            <%=data.Product_Type %>
+                                        </td>
+                                        <td>
+                                            <%=data.Product_Description %>
+                                        </td>
+                                        <td>
+                                            <%=data.Category_Name %>
+                                        </td>
+                                        <td>
+                                          <Center>  <i class="fa-regular fa-pen-to-square"></i></Center>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                        <% } else{ %>
+                                            <h1>No Data found</h1>
+                                            <% } %>
+
+
+
+                        </tbody>
+                    </table>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="../src/assets/js/dashboard.js"></script>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+        .btn-primary {
+            margin-bottom: 15px;
+
+        }
+    </style>
+</body>
+
+</html>

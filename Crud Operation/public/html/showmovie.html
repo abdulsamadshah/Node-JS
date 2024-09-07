@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Movie Show!</title>
+  </head>
+  <body>
+    
+
+    <div class="bg-dark py-3">
+        <div class="container">
+            <div class="h4 text-white">Movie</div>
+        </div>
+    </div>
+
+
+
+    <div class="card" style="width: 18rem;">
+        <img src="{{url('uploads/movies/'.$movie->mimage)}}" alt="error" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{ $movie->title }}</h5>
+          <p class="card-text">{{$movie->Category }}</p>  <p class="card-text">{{$movie->realeaseyear }}</p>
+          <p class="card-text">{{$movie->mdescription }}</p>
+          
+
+
+
+        </div>
+      </div>
+  </body>
+</html>

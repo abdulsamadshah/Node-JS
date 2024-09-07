@@ -1,0 +1,53 @@
+/* General */
+@import url('https://fonts.googleapis.com/css2?family=Poppins%3Awght%40100%3B200%3B300%3B400%3B500%3B600%3B700%3B800%3B900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+:root {
+    --primary-font: 'Poppins', 'sans-serif';
+    
+    
+}
+
+.Category .card {
+    width: 16rem;
+
+}
+
+.Category .card .card-img-top {
+    width: 70px;
+    height: 70px;
+    align-self: center;
+}
+
+
+.Category .card-text {
+    /* width: 16rem; */
+    font-family: var(--primary-font);
+    font-weight: 700;
+   text-align: center;
+}
+
+
+.addcategorybtn{
+/* background-color: black; */
+border-radius: 5px;
+border-color: gainsboro;
+width: 318px;
+
+}
+
+.addcategorybtn:hover{
+    /* background-color: black; */
+    border-radius: 5px;
+    width: 318px;
+    border-color: blue;
+
+    
+    
+    }

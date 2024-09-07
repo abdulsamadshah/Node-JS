@@ -1,0 +1,125 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Crud Operation</title>
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+</head>
+<body>
+
+    <div class="bg-dark py-3">
+        <div class="container">
+            <div class="h4 text-white">Edit Movie</div>
+        </div>
+    </div>
+
+    <div class="container ">
+        <div class="d-flex justify-content-between py-3">
+            <div class="h4">Edit New Movie</div>
+            <div>
+            <a href="{{route("Movie.list")}}" class="btn btn-primary">Back</a>
+            </div>
+        </div>
+
+        <div class="card  bg-danger mb-3" style="width: 40rem;">
+            <div class="card-body">
+              <h5 class="card-title">Oops there was some problem Input field is required</h5>
+            
+              <p class="card-text">0 The Title field is required</p>
+              <p class="card-text">1 The genre field is required</p>
+              <p class="card-text">2 The Poster field is required</p>
+
+
+
+
+            </div>
+          </div>
+
+        <div class="alert alert-success mb-3">
+       
+        </div>
+        <form action="{{route("movie.Updatemovies",$movie->id) }}" method="post" enctype="multipart/form-data">
+            @csrf
+            @method("put")
+        <div class="card border-0 shadow-lg">
+            <div class="card-body">
+                <div class="mb-3"></div>
+                <label for="title" class="form-label">Title</label>
+                <input type="title" name="title" id="title" placeholder="Enter Title" 
+                value="{{ old("title",$movie->title) }}"
+
+                class="form-control @error('title') is-invalid @enderror"/>
+                @error('title')
+                <p class="invalid-feedback">{{$message}}</p>
+                @enderror
+            </div>
+       
+
+            <div class="card-body">
+    
+                <label for="genre" class="form-label">Genre</label>
+                <input type="name" name="Category" id="Category" placeholder="Enter Category Name" 
+                value="{{ old("Category",$movie->Category) }}"
+                class="form-control @error('Category') is-invalid @enderror"/>
+                @error('Category')
+                <p class="invalid-feedback">{{$message}}</p>
+                @enderror
+            </div>
+
+
+            <div class="card-body">
+                <label for="genre" class="form-label">Realease Year</label>
+                <input type="name" name="realeaseyear" id="realeaseyear" placeholder="Enter Realease Year" 
+                value="{{ old("realeaseyear",$movie->realeaseyear) }}"
+                class="form-control @error('realeaseyear') is-invalid @enderror"/>
+                @error('realeaseyear')
+                <p class="invalid-feedback">{{$message}}</p>
+                @enderror
+
+            </div>
+
+            <div class="card-body">
+    
+                <label for="genre" class="form-label">Movie Description</label>
+                <input type="name" name="mdescription" id="mdescription" placeholder="Enter Movie Description" 
+                value="{{ old("mdescription",$movie->mdescription) }}"
+                class="form-control @error('mdescription') is-invalid @enderror"/>
+                @error('mdescription')
+                <p class="invalid-feedback">{{$message}}</p>
+                @enderror
+            </div>
+            
+          
+            <div class="mb-3">
+            <label for="image" class="form-label"></label>
+            <input type="file" name="mimage">
+
+            <div class="pt-3">
+                @if ($movie->mimage != '' && file_exists(public_path().'/uploads/movies/'.$movie->mimage))
+                <img src="{{url('uploads/movies/'.$movie->mimage)}}" alt="error" width="100" height="100" /> 
+             
+             </div>
+             @endif
+        
+            </div>
+
+            </div>
+            <button class="btn btn-primary mt-3 ml-3">Save Employee</button>
+        </div>
+   
+       </form>
+
+    
+          
+        </div>
+
+    </div>
+
+    
+</body>
+</html>
+<script>
+
+</script> -->
