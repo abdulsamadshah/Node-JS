@@ -4,6 +4,8 @@ const globalErrorHandler = require("./controller/errorController");
 const AppError = require("./utils/appError");
 const app = express();
 app.use(express.json());
+
+app.use(express.urlencoded({ extended: true }));
 const path = require('path'); // Import the path module
 
 app.use(express.urlencoded({ extended: true }));

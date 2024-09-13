@@ -29,7 +29,7 @@ const PersonalDetails = asyncErrorHandler(async (req, res, next) => {
     LastName,
     Email,
     MobileNo,
-    Password: hashedPassword,
+    Password,
     ProfileImage,
     UserType,
   };
@@ -99,4 +99,47 @@ const ClassesDetails = asyncErrorHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { PersonalDetails, ClassesDetails };
+//---------------------------- Login Api ----------------------------- //
+const login = asyncErrorHandler(async (req, res, next) => {
+  const { Email, Password } = req.body;
+
+  if (!Email || !Password) {
+      return next(new AppError("Please provide email or password", 400))
+  }
+
+  const result = await User.findOne({ where: { Email } });
+  
+
+  if (!result || !(await bcrypt.compare(Password, result.Password))) {
+      return next(new AppError('Incorrect email or password', 401));
+  }
+
+  const token = generateToken({
+      id: result.id,
+  });
+
+  if(result.UserType=="Classes"){
+    if(!result.PanNo){
+      return res.json({
+        status: true,
+        stepTwo:false,
+        token,
+    })
+    }else{
+      return res.json({
+        status: true,
+        token,
+    })
+    }
+  }else{
+    return res.json({
+      status: true,
+      token,
+  })
+  }
+
+ 
+});
+
+
+module.exports = { PersonalDetails, ClassesDetails,login };

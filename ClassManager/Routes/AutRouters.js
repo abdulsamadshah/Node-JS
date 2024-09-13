@@ -1,4 +1,4 @@
-const { PersonalDetails, ClassesDetails } = require("../controller/AuthController");
+const { PersonalDetails, ClassesDetails,login } = require("../controller/AuthController");
 const router = require("express").Router();
 const upload = require("../utils/uploadMiddleware");
 const authentication = require("../utils/authenticationMiddleware");
@@ -15,4 +15,5 @@ router.route("/auth/ClassesDetails")
     { name: "ClassesImages", maxCount: 1 }
   ]), authentication, ClassesDetails);
 
+  router.route("/auth/login").post(login);
 module.exports = router;
