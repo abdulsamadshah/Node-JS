@@ -4,11 +4,15 @@ const globalErrorHandler = require("./controller/errorController");
 const AppError = require("./utils/appError");
 const app = express();
 app.use(express.json());
+const path = require('path'); // Import the path module
+
 app.use(express.urlencoded({ extended: true }));
-// app.use("/uploads/categories", express.static(path.join(__dirname, 'uploads', 'categories')));
+const AutRouters = require("./Routes/AutRouters");
+app.use("/uploads", express.static(path.join(__dirname, 'uploads', 'Auth')));
+
 // app.use("/api/v1/", CategoryRouters, ProductRouters, CartRouter, OrderRouter);
 
-
+app.use("/api/v1/",AutRouters);
 
 app.all('*', (req, res, next) => {
     const err = new AppError(`Can't find ${req.originalUrl} on the server!`, 404);

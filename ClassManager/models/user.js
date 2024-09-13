@@ -1,22 +1,17 @@
-const { valid } = require("joi");
-const {sequelize} = require("../config/database");
-const {Sequelize} = require("sequelize");
+// models/user.js
+const { Sequelize, DataTypes } = require("sequelize");
+const  sequelize  = require("../config/database"); 
+const bcrypt = require("bcrypt");
+const AppError = require("../utils/appError");
 
-  
-
-module.exports = (sequelize.define("users"), {
-  id: {
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true,
-    type: Sequelize.INTEGER
-  },
+// Define the User Model
+module.exports  = sequelize.define("users", {
   UserType: {
-    type: Sequelize.ENUM('Seller', 'Buyer'),
-    validator:{
-      allowNull:false,
+    type: Sequelize.ENUM('Classes', 'Users'),
+    allowNull: false,
+    validate:{
       notNull:{
-        msg:"UserType Cannot be null",
+        msg:"UserType cannot be null"
       },
       notEmpty:{
         msg:"UserType cannot be empty"
@@ -24,99 +19,154 @@ module.exports = (sequelize.define("users"), {
     }
   },
   ProfileImage: {
-  
-    type: Sequelize.STRING,
-    allowNull:false,
-    validator:{
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate:{
       notNull:{
-        msg:"Profile Image cannot be null"
+        msg:"ProfileImage cannot be null"
       },
       notEmpty:{
-        msg:"Profile Image cannot be empty"
+        msg:"ProfileImage cannot be empty"
       }
     }
   },
   FirstName: {
-    type: Sequelize.STRING,
-    allowNull:false,
-    validator:{
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate:{
       notNull:{
-        msg:"First Name cannot be null"
+        msg:"FirstName cannot be null"
       },
       notEmpty:{
-        msg:"First Name cannot be empty"
+        msg:"FirstName cannot be empty"
       }
     }
   },
   LastName: {
-    type: Sequelize.STRING,
-    allowNull:false,
-    validator:{
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate:{
       notNull:{
-        msg:"Last Name cannot be null"
+        msg:"LastName cannot be null"
       },
       notEmpty:{
-        msg:"Last Name cannot be empty"
+        msg:"LastName cannot be empty"
       }
     }
   },
-
   Email: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    validate: {
+      isEmail: { msg: "Email is not valid" },
+      notNull:{
+        msg:"LastName cannot be null"
+      },
+      notEmpty:{
+        msg:"LastName cannot be empty"
+      }
+    }
   },
   MobileNo: {
-    type: Sequelize.INTEGER
+    type: DataTypes.STRING,
+    allowNull: false,
+   
+    validate:{
+      
+      notNull:{
+        msg:"MobileNo cannot be null"
+      },
+      notEmpty:{
+        msg:"MobileNo cannot be empty"
+      }
+    },
+   
   },
   Password: {
-    type: Sequelize.STRING
-  },
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate:{
+      notNull:{
+        msg:"Password cannot be null"
+      },
+      notEmpty:{
+        msg:"Password cannot be empty"
+      }
+    },
+    set(value) {
 
+      if (value.length < 7) {
+        throw new AppError("Password length must be greater than 7", 400)
+      }
+
+      if (value !=null && value !="") {
+        const hashPassword = bcrypt.hashSync(value, 10);
+        this.setDataValue('Password', hashPassword);
+      } 
+    }
+  },
   ClassesName: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING,
+    allowNull: true
   },
   PanNo: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING,
+    allowNull: true
   },
   PanImage: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING,
+    allowNull: true
   },
   GstNumber: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING,
+    allowNull: true
   },
   GstImage: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING,
+    allowNull: true
   },
   ClassesImages: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING,
+    allowNull: true
   },
- WhatsAppNumber: {
-    type: Sequelize.INTEGER
+  WhatsAppNumber: {
+    type: DataTypes.STRING,
+    allowNull: true
   },
   Address: {
-    type: Sequelize.INTEGER
+    type: DataTypes.STRING,
+    allowNull: true
   },
   Address2: {
-    type: Sequelize.INTEGER
+    type: DataTypes.STRING,
+    allowNull: true
   },
   CityName: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING,
+    allowNull: true
   },
   StateName: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING,
+    allowNull: true
   },
   PinCode: {
-    type: Sequelize.STRING
+    type: DataTypes.STRING,
+    allowNull: true
   },
   createdAt: {
     allowNull: false,
-    type: Sequelize.DATE
+    type: DataTypes.DATE,
+    defaultValue: Sequelize.NOW
   },
   updatedAt: {
     allowNull: false,
-    type: Sequelize.DATE
+    type: DataTypes.DATE,
+    defaultValue: Sequelize.NOW
   },
   deletedAt: {
-    type: Sequelize.DATE,
-  },
-}
-);
+    type: DataTypes.DATE
+  }
+});
+
+
