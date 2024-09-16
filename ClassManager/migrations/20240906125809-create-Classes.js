@@ -2,17 +2,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
-      id: {
-        allowNull: false,
+    await queryInterface.createTable('Classes', {
+      ClassId: {
+        type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        allowNull: false,
       },
-      UserType: {
-        type: Sequelize.ENUM('Classes', 'Users'),
-        allowNull: false
-      },
+    
       ProfileImage: {
         type: Sequelize.STRING,
         allowNull: false
@@ -44,10 +41,12 @@ module.exports = {
         allowNull: true
       },
       PanNo: {
+        unique:true,
         type: Sequelize.STRING,
         allowNull: true
       },
       PanImage: {
+        unique:true,
         type: Sequelize.STRING,
         allowNull: true
       },
@@ -105,6 +104,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('users');
+    await queryInterface.dropTable('Classes');
   }
 };

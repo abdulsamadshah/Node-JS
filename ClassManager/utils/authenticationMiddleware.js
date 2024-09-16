@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const AppError = require('../utils/appError'); // Adjust the path as necessary
 const catchAsync = require('./asyncErrorHandler'); // Adjust the path as necessary
-const user  = require('../models/user'); // Import the user model from your database
+const user  = require('../models/Classes'); // Import the user model from your database
 
 const authentication = catchAsync(async (req, res, next) => {
     // 1. Get the token from the header

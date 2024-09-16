@@ -1,19 +1,34 @@
-const { PersonalDetails, ClassesDetails,login } = require("../controller/AuthController");
+const { PersonalDetails, ClassesDetails, Classeslogin } = require("../controller/Classes/Classes_AuthController");
 const router = require("express").Router();
 const upload = require("../utils/uploadMiddleware");
 const authentication = require("../utils/authenticationMiddleware");
+const { UserDetails, Userlogin } = require("../controller/Users/User_AuthController");
 
-// Personal Details Registration Route
-router.route("/auth/PersonalDetails")
+
+
+
+//--------------- Classes ------------------ //
+
+router.route("/Classes/auth/PersonalDetails")
   .post(upload("uploads/Auth/").single('ProfileImage'), PersonalDetails);
 
-// Classes Details Registration Route
-router.route("/auth/ClassesDetails")
+
+router.route("/Classes/auth/ClassesDetails")
   .post(upload("uploads/Auth/").fields([
     { name: "PanImage", maxCount: 1 },
     { name: "GstImage", maxCount: 1 },
     { name: "ClassesImages", maxCount: 1 }
   ]), authentication, ClassesDetails);
 
-  router.route("/auth/login").post(login);
+router.route("/Classes/auth/login").post(Classeslogin);
+
+
+
+
+//--------------- Users ------------------ //
+router.route("/User/auth/PersonalDetails")
+  .post(upload("uploads/Auth/").single('ProfileImage'), UserDetails);
+
+router.route("/User/auth/login").post(Userlogin);
+
 module.exports = router;
