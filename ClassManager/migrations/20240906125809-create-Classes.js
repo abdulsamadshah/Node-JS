@@ -97,9 +97,10 @@ module.exports = {
         defaultValue: Sequelize.NOW
       },
       deletedAt: {
-        type: Sequelize.DATE,
-        allowNull: true
-      }
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.NOW,
+        allowNull: false,
+      },
     });
   },
 

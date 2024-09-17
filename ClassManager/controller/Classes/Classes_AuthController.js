@@ -4,6 +4,7 @@ const AppError = require("../../utils/appError");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { validatePersonalDetails, validateLogin } = require("../../validators/userValidators");
+const { where } = require("sequelize");
 
 // Utility to generate token
 const generateToken = (payload) => {
@@ -21,11 +22,6 @@ const PersonalDetails = asyncErrorHandler(async (req, res, next) => {
   const ProfileImage = req.file ? req.file.filename : null;
 
 
-
-  // Hash the Password
-  const hashedPassword = await bcrypt.hash(Password, 12);
-
-  // Save User to the Database
   const result = await classes.create({
     FirstName,
     LastName,
@@ -121,4 +117,21 @@ const Classeslogin = asyncErrorHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { PersonalDetails, ClassesDetails, Classeslogin };
+
+const getClassesProfile = asyncErrorHandler(async (req, res, next) => {
+  const id = req.user.ClassId;
+  const result = await user.findOne({ where: { ClassId: id } });
+
+  if (!result) {
+    return next(new AppError("No User Found", 404));
+  }
+
+  res.json({
+    status: true,
+    message: "Profile fetched Succes",
+    ProfileData: result,
+  });
+
+})
+
+module.exports = { PersonalDetails, ClassesDetails, Classeslogin, getClassesProfile };

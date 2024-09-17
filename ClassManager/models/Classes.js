@@ -158,6 +158,8 @@ module.exports = sequelize.define(
     },
     deletedAt: {
       type: DataTypes.DATE,
+      defaultValue: Sequelize.NOW,
+      allowNull: false,
     },
   },
   {
