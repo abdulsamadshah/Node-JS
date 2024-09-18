@@ -101,7 +101,7 @@ module.exports = sequelize.define(
       allowNull: true,
     },
     PanNo: {
-        unique:true,
+      unique: true,
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -110,7 +110,7 @@ module.exports = sequelize.define(
       allowNull: true,
     },
     GstNumber: {
-      unique:true,
+      unique: true,
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -157,9 +157,7 @@ module.exports = sequelize.define(
       defaultValue: Sequelize.NOW,
     },
     deletedAt: {
-      type: DataTypes.DATE,
-      defaultValue: Sequelize.NOW,
-      allowNull: false,
+      type: Sequelize.DATE,
     },
   },
   {

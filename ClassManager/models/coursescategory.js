@@ -41,8 +41,6 @@ module.exports = sequelize.define("CourseCategories", {
   },
   deletedAt: {
     type: Sequelize.DATE,
-    defaultValue: Sequelize.NOW,
-    allowNull: false,
   },
 }, {
   tableName: "CourseCategories",

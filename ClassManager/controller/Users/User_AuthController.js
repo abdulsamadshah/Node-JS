@@ -32,7 +32,10 @@ const UserDetails = asyncErrorHandler(async (req, res, next) => {
     ProfileImage,
   });
 
-  const token = generateToken({ id: result.UserId });
+  
+  const newResult = await result.toJSON();
+  console.log("-------------------userid:-------------",newResult.UserId)
+  const token = generateToken({ id: newResult.UserId });
 
 
   res.json({
@@ -69,4 +72,32 @@ const Userlogin = asyncErrorHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { UserDetails, Userlogin };
+
+
+const getUserProfileData = asyncErrorHandler(async (req, res, next) => {
+  const id = req.user.UserId;
+  console.log("-------------------Id----------------",id)
+
+
+  const result = await users.findOne({ where: { UserId: id } });
+  if (!result) {
+    return next(new AppError("No User Found", 404));
+  }
+
+  const newResult = await result.toJSON();
+  delete newResult.createdAt;
+  delete newResult.updatedAt;
+  delete newResult.deletedAt;
+  delete newResult.Password;
+
+
+
+  res.json({
+    status: true,
+    message: "Profile fetched Succes",
+    ProfileData: newResult,
+  });
+
+})
+
+module.exports = { UserDetails, Userlogin,getUserProfileData };

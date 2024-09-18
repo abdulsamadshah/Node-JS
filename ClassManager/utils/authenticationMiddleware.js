@@ -13,10 +13,12 @@ const authentication = catchAsync(async (req, res, next) => {
     if (!idToken) {
         return next(new AppError("Please provide a token", 401));
     }
-
+    console.log("------------------idToken--------------------",idToken.id)
     // 2. Token verification
     const tokenDetail = jwt.verify(idToken, process.env.JWT_SECRET_KEY);
 
+
+    console.log("------------------TokenId--------------------",tokenDetail.id)
     const freshUser = await user.findByPk(tokenDetail.id);
 
     if (!freshUser) {

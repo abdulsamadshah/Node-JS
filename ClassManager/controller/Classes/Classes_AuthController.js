@@ -4,7 +4,7 @@ const AppError = require("../../utils/appError");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { validatePersonalDetails, validateLogin } = require("../../validators/userValidators");
-const { where } = require("sequelize");
+
 
 // Utility to generate token
 const generateToken = (payload) => {
@@ -31,7 +31,8 @@ const PersonalDetails = asyncErrorHandler(async (req, res, next) => {
     ProfileImage,
   });
 
-  const token = generateToken({ id: result.ClassId });
+  const newResult = await result.toJSON();
+  const token = generateToken({ id: newResult.ClassId });
 
 
   res.json({
@@ -99,6 +100,7 @@ const Classeslogin = asyncErrorHandler(async (req, res, next) => {
   if (error) return next(new AppError(error.details[0].message, 400));
 
   const { Email, Password } = req.body;
+  console.log("-------------ClassesData")
   const user = await classes.findOne({ where: { Email } });
 
   if (!user || !(await bcrypt.compare(Password, user.Password))) {
@@ -120,16 +122,25 @@ const Classeslogin = asyncErrorHandler(async (req, res, next) => {
 
 const getClassesProfile = asyncErrorHandler(async (req, res, next) => {
   const id = req.user.ClassId;
-  const result = await user.findOne({ where: { ClassId: id } });
 
+
+  const result = await classes.findOne({ where: { ClassId: id } });
   if (!result) {
     return next(new AppError("No User Found", 404));
   }
 
+  const newResult = await result.toJSON();
+  delete newResult.createdAt;
+  delete newResult.updatedAt;
+  delete newResult.deletedAt;
+  delete newResult.Password;
+
+
+
   res.json({
     status: true,
     message: "Profile fetched Succes",
-    ProfileData: result,
+    ProfileData: newResult,
   });
 
 })

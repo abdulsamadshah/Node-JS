@@ -108,9 +108,7 @@ module.exports = sequelize.define(
       defaultValue: Sequelize.NOW,
     },
     deletedAt: {
-      type: DataTypes.DATE,
-      defaultValue: Sequelize.NOW,
-      allowNull: false,
+      type: Sequelize.DATE,
     },
   },
   {
@@ -118,7 +116,5 @@ module.exports = sequelize.define(
     paranoid: true,
     freezeTableName: true,
     tableName: "users"
-
-
   }
 );
