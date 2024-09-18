@@ -1,7 +1,7 @@
 const { PersonalDetails, ClassesDetails, Classeslogin, getClassesProfile } = require("../controller/Classes/Classes_AuthController");
 const router = require("express").Router();
 const upload = require("../utils/uploadMiddleware");
-const authentication = require("../utils/authenticationMiddleware");
+const {authentication,Userauthentication} = require("../utils/authenticationMiddleware");
 const { UserDetails, Userlogin, getUserProfileData } = require("../controller/Users/User_AuthController");
 
 
@@ -29,7 +29,7 @@ router.route("/User/auth/PersonalDetails")
   .post(upload("uploads/Auth/").single('ProfileImage'), UserDetails);
 
 router.route("/User/auth/login").post(Userlogin);
-router.route("/User/auth/UserProfile").get(authentication,getUserProfileData);
+router.route("/User/auth/UserProfile").get(Userauthentication,getUserProfileData,);
 
 
 

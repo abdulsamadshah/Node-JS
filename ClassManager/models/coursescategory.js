@@ -10,6 +10,7 @@ module.exports = sequelize.define("CourseCategories", {
   },
   CourseName: {
     type: Sequelize.STRING,
+    allowNull: false,
     validate:{
       notNull:{
         msg:"CourseName cannot be null",

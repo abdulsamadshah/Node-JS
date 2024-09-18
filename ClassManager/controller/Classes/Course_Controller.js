@@ -4,11 +4,11 @@ const asyncErrorHandler = require("../../utils/asyncErrorHandler");
 const { validatecourseCateogy } = require("../../validators/CourseValidators");
 
 const AddCourseCategory = asyncErrorHandler(async (req, res, next) => {
-  const { CourseName, CourseImage } = req.body;
+  const { CourseName } = req.body;
   const { error } = validatecourseCateogy(req.body);
   if (error) return next(new AppError(error.details[0].message, 400));
 
-  CourseImage = req.file ? req.file.filename : null;
+  const CourseImage = req.file ? req.file.filename : null;
 
 
 
@@ -25,10 +25,12 @@ const AddCourseCategory = asyncErrorHandler(async (req, res, next) => {
 
 const getCourse_Category = asyncErrorHandler(async (req, res, next) => {
 
-  const result = await coursescategory.findAll();
+  const result = await coursescategory.findAll({attributes:{exclude:[
+    'createdAt', 'updatedAt', 'deletedAt'
+  ]}});
   res.json({
     status: true,
-    message: result.length != 0 ? "Data Fetched Success" : "No Data found",
+    message: result.length ? "Data Fetched Success" : "No Data found",
     CourseCategory: result,
   })
 

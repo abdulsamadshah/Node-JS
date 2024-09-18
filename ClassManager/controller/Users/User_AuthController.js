@@ -7,7 +7,7 @@ const { validatePersonalDetails, validateLogin } = require("../../validators/use
 
 // Utility to generate token
 const generateToken = (payload) => {
-  return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
+  return jwt.sign(payload, process.env.JWT_User_SECRET_KEY, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
@@ -17,12 +17,12 @@ const UserDetails = asyncErrorHandler(async (req, res, next) => {
   const { error } = validatePersonalDetails(req.body);
   if (error) return next(new AppError(error.details[0].message, 400));
 
+
+  
   const { FirstName, LastName, Email, MobileNo, Password } = req.body;
   const ProfileImage = req.file ? req.file.filename : null;
 
 
-
-  
   const result = await users.create({
     FirstName,
     LastName,
@@ -32,9 +32,7 @@ const UserDetails = asyncErrorHandler(async (req, res, next) => {
     ProfileImage,
   });
 
-  
   const newResult = await result.toJSON();
-  console.log("-------------------userid:-------------",newResult.UserId)
   const token = generateToken({ id: newResult.UserId });
 
 
@@ -45,6 +43,8 @@ const UserDetails = asyncErrorHandler(async (req, res, next) => {
       token,
     },
   });
+
+
 });
 
 
