@@ -23,7 +23,7 @@ module.exports = {
       },
       image: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: false
       },
       price: {
         type: Sequelize.INTEGER,
@@ -35,11 +35,11 @@ module.exports = {
       },
       title: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: false
       },
       description: {
         type: Sequelize.TEXT,
-        allowNull: true
+        allowNull: false
       },
       demoLectureAvailable: {
         type: Sequelize.BOOLEAN,
@@ -53,8 +53,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull:true,
         references: {
-          model: "users",
-          key: "UserId"
+          model: "Classes",
+          key: "ClassId"
         }
       },
       createdAt: {

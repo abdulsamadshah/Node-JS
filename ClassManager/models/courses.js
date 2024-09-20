@@ -20,7 +20,7 @@ module.exports = sequelize.define("Courses", {
     }
   },
   name: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT, // Stores serialized JSON
     allowNull: false,
     validate: {
       notNull: {
@@ -29,8 +29,18 @@ module.exports = sequelize.define("Courses", {
       notEmpty: {
         msg: "name cannot be empty"
       }
+    },
+    // Automatically parse the JSON string to an array/object when retrieving
+    get() {
+      const rawValue = this.getDataValue('name');
+      return JSON.parse(rawValue); // Convert JSON string back to array/object
+    },
+    // Automatically stringify the array/object before saving to the DB
+    set(value) {
+      this.setDataValue('name', JSON.stringify(value)); // Convert array/object to JSON string
     }
   },
+  
   validity: {
     type: Sequelize.INTEGER,
     allowNull: false,
@@ -45,7 +55,7 @@ module.exports = sequelize.define("Courses", {
   },
   image: {
     type: Sequelize.STRING,
-    allowNull: true,
+    allowNull: false,
     validate: {
       notNull: {
         msg: "image name cannot be null"
@@ -73,7 +83,7 @@ module.exports = sequelize.define("Courses", {
   },
   title: {
     type: Sequelize.STRING,
-    allowNull: true,
+    allowNull: false,
     validate: {
       notNull: {
         msg: "title cannot be null"
@@ -85,7 +95,7 @@ module.exports = sequelize.define("Courses", {
   },
   description: {
     type: Sequelize.TEXT,
-    allowNull: true,
+    allowNull: false,
     validate: {
       notNull: {
         msg: "description cannot be null"

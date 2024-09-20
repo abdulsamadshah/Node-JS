@@ -1,4 +1,4 @@
-const { valid } = require("joi");
+
 const courseitem = require("../../models/courseitem");
 const courses = require("../../models/courses");
 const coursescategory = require("../../models/coursescategory");
@@ -84,22 +84,40 @@ const getCourse_Proudct = asyncErrorHandler(async (req, res, next) => {
 });
 
 const AddCoures = asyncErrorHandler(async (req, res, next) => {
-  const id = req.user.id;
   const { category, name, validity, price, discount, title, description } = req.body;
   const { error } = validateCourseDetail(req.body);
   if (error) return next(new AppError(error.details[0].message, 400));
 
   const image = req.file ? req.file.filename : null;
 
- await courses.create({ category, name, validity, image, price, discount, title, description });
+  const result = await courses.create({ category, name, validity, image, price, discount, title, description, createdBy: req.user.ClassId, });
 
   res.json({
     status: true,
-    message: "Course created Succes"
+    message: "Course created Succes",
+    result: result,
   });
 
+});
+
+
+
+const getCourses = asyncErrorHandler(async (req, res, next) => {
+  const result = await courses.findAll({
+    where: { createdBy: req.user.ClassId }, attributes: {
+      exclude: [
+        'createdAt', 'updatedAt', 'deletedAt', 'createdBy'
+      ]
+    }
+  });
+
+  res.json({
+    status: true,
+    message: result.length ? "Data fetched success" : "No Data found",
+    Courses: result,
+  })
 })
 
 
 
-module.exports = { AddCourseCategory, getCourse_Category, AddCourse_Product, getCourse_Proudct };
+module.exports = { AddCourseCategory, getCourse_Category, AddCourse_Product, getCourse_Proudct, AddCoures, getCourses };
