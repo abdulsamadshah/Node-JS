@@ -1,7 +1,10 @@
+const { valid } = require("joi");
+const courseitem = require("../../models/courseitem");
+const courses = require("../../models/courses");
 const coursescategory = require("../../models/coursescategory");
 const AppError = require("../../utils/appError");
 const asyncErrorHandler = require("../../utils/asyncErrorHandler");
-const { validatecourseCateogy } = require("../../validators/CourseValidators");
+const { validatecourseCateogy, validatecourse_Product, validateCourse_Id, validateCourseDetail } = require("../../validators/CourseValidators");
 
 const AddCourseCategory = asyncErrorHandler(async (req, res, next) => {
   const { CourseName } = req.body;
@@ -13,21 +16,22 @@ const AddCourseCategory = asyncErrorHandler(async (req, res, next) => {
 
 
 
-  const category = await coursescategory.create({ CourseName, CourseImage });
+  await coursescategory.create({ CourseName, CourseImage });
   res.json({
     status: true,
     message: "Course Category Created Succes",
-    data: category
   })
 });
 
 
-
 const getCourse_Category = asyncErrorHandler(async (req, res, next) => {
-
-  const result = await coursescategory.findAll({attributes:{exclude:[
-    'createdAt', 'updatedAt', 'deletedAt'
-  ]}});
+  const result = await coursescategory.findAll({
+    attributes: {
+      exclude: [
+        'createdAt', 'updatedAt', 'deletedAt'
+      ]
+    }
+  });
   res.json({
     status: true,
     message: result.length ? "Data Fetched Success" : "No Data found",
@@ -38,6 +42,64 @@ const getCourse_Category = asyncErrorHandler(async (req, res, next) => {
 
 
 
+const AddCourse_Product = asyncErrorHandler(async (req, res, next) => {
+  const { name, CourseId } = req.body;
+  const { error } = validatecourse_Product(req.body);
+  if (error) return next(new AppError(error.details[0].message, 400));
+  const Image = req.file ? req.file.filename : null;
+  const CategoryidExists = await coursescategory.findByPk(CourseId);
+  if (!CategoryidExists) {
+    return res.status(400).json({
+      status: false,
+      message: "Invalid CategoryId",
+    });
+  }
+
+  await courseitem.create({ CourseId, name, Image });
+
+  res.json({
+    status: true,
+    message: "Product Created Succes",
+  })
+});
+
+const getCourse_Proudct = asyncErrorHandler(async (req, res, next) => {
+  const CourseId = req.query.CourseId;
+  const { error } = validateCourse_Id(req.query);
+  if (error) return next(new AppError(error.details[0].message, 400));
+  const product = await courseitem.findAll({
+    where: { CourseId }, attributes: {
+      exclude: [
+        'createdAt', 'updatedAt', 'deletedAt', 'CourseId'
+      ]
+    }
+  },);
+
+  res.json({
+    status: true,
+    message: product.length ? "Data fetched Success" : "No Data found",
+    Product: product,
+  })
+
+});
+
+const AddCoures = asyncErrorHandler(async (req, res, next) => {
+  const id = req.user.id;
+  const { category, name, validity, price, discount, title, description } = req.body;
+  const { error } = validateCourseDetail(req.body);
+  if (error) return next(new AppError(error.details[0].message, 400));
+
+  const image = req.file ? req.file.filename : null;
+
+ await courses.create({ category, name, validity, image, price, discount, title, description });
+
+  res.json({
+    status: true,
+    message: "Course created Succes"
+  });
+
+})
 
 
-module.exports={AddCourseCategory,getCourse_Category};
+
+module.exports = { AddCourseCategory, getCourse_Category, AddCourse_Product, getCourse_Proudct };
