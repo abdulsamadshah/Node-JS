@@ -20,7 +20,7 @@ module.exports = sequelize.define("Courses", {
     }
   },
   name: {
-    type: Sequelize.TEXT, // Stores serialized JSON
+    type: Sequelize.JSON,
     allowNull: false,
     validate: {
       notNull: {

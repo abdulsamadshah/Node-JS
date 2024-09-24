@@ -1,4 +1,4 @@
-const { AddCourseCategory, getCourse_Category, AddCourse_Product, getCourse_Proudct, AddCoures, getCourses } = require("../controller/Classes/Course_Controller");
+const { AddCourseCategory, getCourse_Category, AddCourse_Product, getCourse_Proudct, AddCoures, getCourses, getCoursesDetail } = require("../controller/Classes/Course_Controller");
 const { authentication } = require("../utils/authenticationMiddleware");
 const upload = require("../utils/uploadMiddleware");
 
@@ -15,7 +15,10 @@ router.route("/GetCourse_Product").get(getCourse_Proudct)
 
 
 router.route("/Classes/AddCourses").post(upload("uploads/Courses/").single("image"),authentication, AddCoures);
-router.route("/Classes/GetCourses").get(authentication,getCourses)
+router.route("/Classes/Active_courses").get(authentication, getCourses("Active"));
+router.route("/Classes/Pending_courses").get(authentication, getCourses("Pending"));
+
+router.route("/Classes/GetCourse_detail").get(authentication,getCoursesDetail);
 
 
 

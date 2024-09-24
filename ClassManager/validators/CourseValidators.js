@@ -30,8 +30,8 @@ const validateCourse_Id = (data)=>{
 const validateCourseDetail = (data)=>{
     const schema = Joi.object({
         category:Joi.string().required(),
-        name:Joi.string().required(),
-        validity:Joi.string().required(),
+        name: Joi.array().items(Joi.string()).required(),
+                validity:Joi.string().required(),
         price:Joi.string().required(),
         discount:Joi.string().required(),
         title:Joi.string().required(),
@@ -41,6 +41,13 @@ const validateCourseDetail = (data)=>{
     return schema.validate(data);
 }
 
+const validateId = (data)=>{
+    const schema = Joi.object({
+        id:Joi.string().required(),
+        // CourseImage:Joi.string().required(),
+    });
+    return schema.validate(data);
+}
 
 
-module.exports ={validatecourseCateogy,validatecourse_Product,validateCourse_Id,validateCourseDetail}
+module.exports ={validatecourseCateogy,validatecourse_Product,validateCourse_Id,validateCourseDetail,validateId}

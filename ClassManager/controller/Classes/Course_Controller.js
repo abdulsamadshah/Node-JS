@@ -4,7 +4,7 @@ const courses = require("../../models/courses");
 const coursescategory = require("../../models/coursescategory");
 const AppError = require("../../utils/appError");
 const asyncErrorHandler = require("../../utils/asyncErrorHandler");
-const { validatecourseCateogy, validatecourse_Product, validateCourse_Id, validateCourseDetail } = require("../../validators/CourseValidators");
+const { validatecourseCateogy, validatecourse_Product, validateCourse_Id, validateCourseDetail, validateId } = require("../../validators/CourseValidators");
 
 const AddCourseCategory = asyncErrorHandler(async (req, res, next) => {
   const { CourseName } = req.body;
@@ -89,8 +89,13 @@ const AddCoures = asyncErrorHandler(async (req, res, next) => {
   if (error) return next(new AppError(error.details[0].message, 400));
 
   const image = req.file ? req.file.filename : null;
-
-  const result = await courses.create({ category, name, validity, image, price, discount, title, description, createdBy: req.user.ClassId, });
+  let nameArray;
+  try {
+    nameArray = JSON.parse(req.body.name);
+  } catch (e) {
+    return next(new AppError('Invalid JSON format for name field', 400));
+  }
+  const result = await courses.create({ category, name: nameArray, validity, image, price, discount, title, description, createdBy: req.user.ClassId, });
 
   res.json({
     status: true,
@@ -102,22 +107,78 @@ const AddCoures = asyncErrorHandler(async (req, res, next) => {
 
 
 
-const getCourses = asyncErrorHandler(async (req, res, next) => {
-  const result = await courses.findAll({
-    where: { createdBy: req.user.ClassId }, attributes: {
-      exclude: [
-        'createdAt', 'updatedAt', 'deletedAt', 'createdBy'
-      ]
-    }
+function getCourses(type) {
+  return asyncErrorHandler(async (req, res, next) => {
+    const result = await courses.findAll({
+      where: { createdBy: req.user.ClassId },
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'deletedAt', 'createdBy']
+      }
+    });
+
+    const newResult = result.map(course => {
+      const courseNamelist = JSON.parse(course.name);
+      const formattedName = courseNamelist.map(name => ({
+        name: name
+      }));
+
+      const { name, ...otherProperties } = course.toJSON();
+
+      return {
+        ...otherProperties,
+        courseNames: formattedName,
+      };
+    }).filter(course => {
+
+      if (type === "Active") {
+        return course.status === true;
+      } else if (type === "Pending") {
+        return course.status === false;
+      }
+      return false;
+    });
+
+    res.json({
+      status: true,
+      message: newResult.length ? "Data fetched success" : "No Data found",
+      Courses: newResult,
+    });
   });
+}
+
+
+
+const getCoursesDetail = asyncErrorHandler(async (req, res, next) => {
+  const { error } = validateId(req.query);
+  if (error) return next(new AppError(error.details[0].message, 400));
+
+  const result = await courses.findOne({
+    where: { id: req.query.id, createdBy: req.user.ClassId },
+  });
+
+  if (!result) {
+    return next(new AppError("please provide valid Id", 400))
+  }
+  const course_detail = result.toJSON();
+  course_detail.name = JSON.parse(course_detail.name);
+  course_detail.courseNames = course_detail.name.map(items => {
+    return { name: items }
+  })
+  delete course_detail.createdAt;
+  delete course_detail.updatedAt;
+  delete course_detail.deletedAt;
+  delete course_detail.createdBy;
+  delete course_detail.name;
+
+
 
   res.json({
     status: true,
-    message: result.length ? "Data fetched success" : "No Data found",
-    Courses: result,
-  })
+    message: "Success",
+    Courses: course_detail,
+  });
 })
 
 
 
-module.exports = { AddCourseCategory, getCourse_Category, AddCourse_Product, getCourse_Proudct, AddCoures, getCourses };
+module.exports = { AddCourseCategory, getCourse_Category, AddCourse_Product, getCourse_Proudct, AddCoures, getCourses, getCoursesDetail };
