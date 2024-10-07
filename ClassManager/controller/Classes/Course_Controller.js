@@ -100,7 +100,7 @@ const AddCoures = asyncErrorHandler(async (req, res, next) => {
   res.json({
     status: true,
     message: "Course created Succes",
-    result: result,
+  
   });
 
 });

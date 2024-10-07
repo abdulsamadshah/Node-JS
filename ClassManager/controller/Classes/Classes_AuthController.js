@@ -22,6 +22,8 @@ const PersonalDetails = asyncErrorHandler(async (req, res, next) => {
   const ProfileImage = req.file ? req.file.filename : null;
 
 
+
+
   const result = await classes.create({
     FirstName,
     LastName,
@@ -113,9 +115,13 @@ const Classeslogin = asyncErrorHandler(async (req, res, next) => {
 
   res.json({
     status: true,
+    message:"Login successfully",
     data: {
-      token, stepOne: `${user.Email != null ? true : false}`, stepTwo: `${user.ClassesName != null ? true : false}`,
+      token,
+      stepOne: user.Email != null,  // Directly evaluates to true or false
+      stepTwo: user.ClassesName != null,  // Directly evaluates to true or false
     },
+    
   });
 });
 
@@ -135,6 +141,11 @@ const getClassesProfile = asyncErrorHandler(async (req, res, next) => {
   delete newResult.deletedAt;
   delete newResult.Password;
 
+  // newResult.ProfileImage = `${req.protocol}://${req.get('host')}/uploads/Auth/${newResult.ProfileImage}`;
+
+  newResult.ProfileImage = `uploads/Auth/${newResult.ProfileImage}`;
+  newResult.ClassesImages = `${newResult.ClassesImages}`;
+
 
 
   res.json({
@@ -143,6 +154,9 @@ const getClassesProfile = asyncErrorHandler(async (req, res, next) => {
     ProfileData: newResult,
   });
 
-})
+});
+
+
+
 
 module.exports = { PersonalDetails, ClassesDetails, Classeslogin, getClassesProfile };

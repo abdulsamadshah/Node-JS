@@ -12,7 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 const AutRouters = require("./Routes/AutRouters");
 const CourseRouters = require("./Routes/CourseRouters");
 
-app.use("/uploads", express.static(path.join(__dirname, 'uploads', 'Auth')));
+// app.use("/uploads", express.static(path.join(__dirname, 'uploads', 'Auth')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // app.use("/api/v1/", CategoryRouters, ProductRouters, CartRouter, OrderRouter);
 

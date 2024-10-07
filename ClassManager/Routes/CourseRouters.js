@@ -9,7 +9,7 @@ router.route("/GetCourseCategory").get(getCourse_Category);
 
 // router.route("/Admin/AddCourse_Product").post(upload("uploads/CourseProduct/").single("Image"),AddCourse_Product);
 
-router.route("/Admin/AddCourse_Product").post(upload("uploads/CourseProduct/").single("Image"), AddCourse_Product);
+router.route("/Admin/AddCourse_Product").post(upload("uploads/CourseProduct/").single("Product_Image"), AddCourse_Product);
 
 router.route("/GetCourse_Product").get(getCourse_Proudct)
 
