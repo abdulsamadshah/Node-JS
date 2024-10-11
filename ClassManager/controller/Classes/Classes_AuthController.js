@@ -23,18 +23,23 @@ const PersonalDetails = asyncErrorHandler(async (req, res, next) => {
   const { FirstName, LastName, Email, MobileNo, Password } = req.body;
   const ProfileImage = req.file ? req.file.filename : null;
 
-
   const existingUser = await classes.findOne({ where: { Email } });
 
   if (existingUser) {
-    await existingUser.update({
+    // Prepare the updated fields
+    const updatedFields = {
       FirstName: FirstName || existingUser.FirstName,
       LastName: LastName || existingUser.LastName,
       MobileNo: MobileNo || existingUser.MobileNo,
-      ProfileImage: ProfileImage || existingUser.ProfileImage,
-      Password: Password ? bcrypt.hashSync(Password, 8) : existingUser.Password,
-    });
+      Password: Password ,
+    };
 
+    // Update ProfileImage only if a new one is provided
+    if (ProfileImage !== null) {
+      updatedFields.ProfileImage = ProfileImage || existingUser.ProfileImage; 
+    }
+
+    await existingUser.update(updatedFields);
 
     return res.json({
       status: true,
@@ -46,19 +51,18 @@ const PersonalDetails = asyncErrorHandler(async (req, res, next) => {
     });
   } else {
     //--------------------------- Create User ----------------------- //
-
+  
     const result = await classes.create({
       FirstName,
       LastName,
       Email,
       MobileNo,
-      Password,
+      Password, 
       ProfileImage,
     });
 
     const newResult = await result.toJSON();
     const token = generateToken({ id: newResult.ClassId });
-
 
     res.json({
       status: true,
@@ -68,9 +72,8 @@ const PersonalDetails = asyncErrorHandler(async (req, res, next) => {
       },
     });
   }
-
-
 });
+
 
 
 const ClassesDetails = asyncErrorHandler(async (req, res, next) => {
@@ -93,32 +96,33 @@ const ClassesDetails = asyncErrorHandler(async (req, res, next) => {
     PinCode,
   } = req.body;
 
-  const PanImage = req.files?.PanImage?.[0]?.path || null;
-  const GstImage = req.files?.GstImage?.[0]?.path || null;
-  const ClassesImages = req.files?.ClassesImages?.[0]?.path || null;
+  // Extract image paths
+  const PanImage = req.files?.PanImage?.[0]?.path || user.PanImage; // Default to existing if not provided
+  const GstImage = req.files?.GstImage?.[0]?.path || user.GstImage; // Default to existing if not provided
+  const ClassesImages = req.files?.ClassesImages?.[0]?.path || user.ClassesImages; // Default to existing if not provided
+
+  // Prepare the updated fields dynamically
+  const updatedFields = {
+    ClassesName: ClassesName || user.ClassesName,
+    PanNo: PanNo || user.PanNo,
+    PanImage: PanImage, // Always set, even if unchanged
+    GstNumber: GstNumber || user.GstNumber,
+    GstImage: GstImage, // Always set, even if unchanged
+    ClassesImages: ClassesImages, // Always set, even if unchanged
+    WhatsAppNumber: WhatsAppNumber || user.WhatsAppNumber,
+    Address: Address || user.Address,
+    Address2: Address2 || user.Address2,
+    CityName: CityName || user.CityName,
+    StateName: StateName || user.StateName,
+    PinCode: PinCode || user.PinCode,
+  };
 
   // Update User class details
-  await classes.update(
-    {
-      ClassesName,
-      PanNo,
-      PanImage,
-      GstNumber,
-      GstImage,
-      ClassesImages,
-      WhatsAppNumber,
-      Address,
-      Address2,
-      CityName,
-      StateName,
-      PinCode,
-    },
-    { where: { ClassId: userId } }
-  );
+  await classes.update(updatedFields, { where: { ClassId: userId } });
 
   res.json({
     status: true,
-    message: user.PanNo == null ?"Classes registration successfully completed":"updated successfully",
+    message: user.PanNo == null ? "Classes registration successfully completed" : "Updated successfully",
   });
 });
 
@@ -128,59 +132,54 @@ const Classeslogin = asyncErrorHandler(async (req, res, next) => {
   if (error) return next(new AppError(error.details[0].message, 400));
 
   const { Email, Password } = req.body;
-  console.log("-------------ClassesData")
   const user = await classes.findOne({ where: { Email } });
 
   if (!user || !(await bcrypt.compare(Password, user.Password))) {
     return next(new AppError("Incorrect email or password", 401));
   }
 
-  const token = generateToken({ id: user.id });
-
-
+  // Use ClassId instead of user.id
+  const token = generateToken({ id: user.ClassId });
 
   res.json({
     status: true,
     message: "Login successfully",
     data: {
       token,
-      stepOne: user.Email != null,  // Directly evaluates to true or false
-      stepTwo: user.ClassesName != null,  // Directly evaluates to true or false
+      stepOne: user.Email != null,  // StepOne is complete if email exists
+      stepTwo: user.ClassesName != null,  // StepTwo is complete if ClassesName exists
     },
-
   });
 });
 
 
+
 const getClassesProfile = asyncErrorHandler(async (req, res, next) => {
-  const id = req.user.ClassId;
+  const id = req.user.ClassId;  // Get ClassId from req.user, set by authentication middleware
 
+  console.log("Class ID from request user: ", id); // Log for debugging
 
-  const result = await classes.findOne({ where: { ClassId: id } });
+  const result = await classes.findOne({ where: { ClassId: id } }); // Fetch user from database
   if (!result) {
     return next(new AppError("No User Found", 404));
   }
 
-  const newResult = await result.toJSON();
+  const newResult = result.toJSON(); // Convert to JSON
   delete newResult.createdAt;
   delete newResult.updatedAt;
   delete newResult.deletedAt;
-  delete newResult.Password;
+  // delete newResult.Password;
 
-  // newResult.ProfileImage = `${req.protocol}://${req.get('host')}/uploads/Auth/${newResult.ProfileImage}`;
-
-  newResult.ProfileImage = `uploads/Auth/${newResult.ProfileImage}`;
-  newResult.ClassesImages = `${newResult.ClassesImages}`;
-
-
+  newResult.ProfileImage = `uploads/Auth/${newResult.ProfileImage}`; // Add image path
+  newResult.ClassesImages = `${newResult.ClassesImages}`; // Assuming this field exists
 
   res.json({
     status: true,
-    message: "Profile fetched Succes",
+    message: "Profile fetched successfully",
     ProfileData: newResult,
   });
-
 });
+
 
 
 

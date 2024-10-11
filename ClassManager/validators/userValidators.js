@@ -7,6 +7,7 @@ const validatePersonalDetails = (data) => {
     Email: Joi.string().email().required(),
     MobileNo: Joi.string().min(10).max(15).required(),
     Password: Joi.string().min(6).required(),
+    ProfileImage: Joi.string().allow(null, '').optional(),
   });
   return schema.validate(data);
 };

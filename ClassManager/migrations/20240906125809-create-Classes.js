@@ -12,7 +12,7 @@ module.exports = {
     
       ProfileImage: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
       },
       FirstName: {
         type: Sequelize.STRING,
@@ -46,7 +46,6 @@ module.exports = {
         allowNull: true
       },
       PanImage: {
-        unique:true,
         type: Sequelize.STRING,
         allowNull: true
       },
