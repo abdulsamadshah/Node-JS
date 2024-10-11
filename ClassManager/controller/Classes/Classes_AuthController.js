@@ -3,6 +3,8 @@ const asyncErrorHandler = require("../../utils/asyncErrorHandler");
 const AppError = require("../../utils/appError");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
+
 const { validatePersonalDetails, validateLogin } = require("../../validators/userValidators");
 
 
@@ -13,7 +15,7 @@ const generateToken = (payload) => {
   });
 };
 
-// Handle Personal Details Registration
+//---------------- Handle Personal Details Registration -------------------- //
 const PersonalDetails = asyncErrorHandler(async (req, res, next) => {
   const { error } = validatePersonalDetails(req.body);
   if (error) return next(new AppError(error.details[0].message, 400));
@@ -22,28 +24,52 @@ const PersonalDetails = asyncErrorHandler(async (req, res, next) => {
   const ProfileImage = req.file ? req.file.filename : null;
 
 
+  const existingUser = await classes.findOne({ where: { Email } });
+
+  if (existingUser) {
+    await existingUser.update({
+      FirstName: FirstName || existingUser.FirstName,
+      LastName: LastName || existingUser.LastName,
+      MobileNo: MobileNo || existingUser.MobileNo,
+      ProfileImage: ProfileImage || existingUser.ProfileImage,
+      Password: Password ? bcrypt.hashSync(Password, 8) : existingUser.Password,
+    });
 
 
-  const result = await classes.create({
-    FirstName,
-    LastName,
-    Email,
-    MobileNo,
-    Password,
-    ProfileImage,
-  });
+    return res.json({
+      status: true,
+      message: "User details updated successfully",
+      data: {
+        stepOne: true,
+        stepTwo: true, // Indicate that step two is complete
+      },
+    });
+  } else {
+    //--------------------------- Create User ----------------------- //
 
-  const newResult = await result.toJSON();
-  const token = generateToken({ id: newResult.ClassId });
+    const result = await classes.create({
+      FirstName,
+      LastName,
+      Email,
+      MobileNo,
+      Password,
+      ProfileImage,
+    });
+
+    const newResult = await result.toJSON();
+    const token = generateToken({ id: newResult.ClassId });
 
 
-  res.json({
-    status: true,
-    message: "Step One Registration successful",
-    data: {
-      token, stepOne: true, stepTwo: false,
-    },
-  });
+    res.json({
+      status: true,
+      message: "Step One Registration successful",
+      data: {
+        token, stepOne: true, stepTwo: false,
+      },
+    });
+  }
+
+
 });
 
 
@@ -92,7 +118,7 @@ const ClassesDetails = asyncErrorHandler(async (req, res, next) => {
 
   res.json({
     status: true,
-    message: "Classes registration successfully completed",
+    message: user.PanNo == null ?"Classes registration successfully completed":"updated successfully",
   });
 });
 
@@ -115,13 +141,13 @@ const Classeslogin = asyncErrorHandler(async (req, res, next) => {
 
   res.json({
     status: true,
-    message:"Login successfully",
+    message: "Login successfully",
     data: {
       token,
       stepOne: user.Email != null,  // Directly evaluates to true or false
       stepTwo: user.ClassesName != null,  // Directly evaluates to true or false
     },
-    
+
   });
 });
 
@@ -159,4 +185,18 @@ const getClassesProfile = asyncErrorHandler(async (req, res, next) => {
 
 
 
-module.exports = { PersonalDetails, ClassesDetails, Classeslogin, getClassesProfile };
+
+const logOut = asyncErrorHandler(async (req, res, next) => {
+
+  return res.json({
+    status: true,
+    message: 'LogOut successfully',
+  });
+
+});
+
+
+
+
+
+module.exports = { PersonalDetails, ClassesDetails, Classeslogin, getClassesProfile, logOut };

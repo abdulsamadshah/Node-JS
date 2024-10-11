@@ -1,7 +1,7 @@
-const { PersonalDetails, ClassesDetails, Classeslogin, getClassesProfile } = require("../controller/Classes/Classes_AuthController");
+const { PersonalDetails, ClassesDetails, Classeslogin, getClassesProfile, logOut } = require("../controller/Classes/Classes_AuthController");
 const router = require("express").Router();
 const upload = require("../utils/uploadMiddleware");
-const {authentication,Userauthentication} = require("../utils/authenticationMiddleware");
+const { authentication, Userauthentication } = require("../utils/authenticationMiddleware");
 const { UserDetails, Userlogin, getUserProfileData } = require("../controller/Users/User_AuthController");
 
 
@@ -10,7 +10,7 @@ const { UserDetails, Userlogin, getUserProfileData } = require("../controller/Us
 //--------------- Classes ------------------ //
 
 router.route("/Classes/auth/PersonalDetails")
-  .post(upload("uploads/Auth/").single('ProfileImage'), PersonalDetails);
+  .post(upload("uploads/Auth/").single('ProfileImage'),PersonalDetails);
 
 
 router.route("/Classes/auth/ClassesDetails")
@@ -21,15 +21,16 @@ router.route("/Classes/auth/ClassesDetails")
   ]), authentication, ClassesDetails);
 
 router.route("/Classes/auth/login").post(Classeslogin);
-router.route("/Classes/auth/getProfileData").get(authentication,getClassesProfile);
+router.route("/Classes/auth/getProfileData").get(authentication, getClassesProfile);
 
 
 //--------------- Users ------------------ //
-router.route("/User/auth/PersonalDetails")
+router.route("/User/auth/PersonalDetails",)
   .post(upload("uploads/Auth/").single('ProfileImage'), UserDetails);
 
 router.route("/User/auth/login").post(Userlogin);
-router.route("/User/auth/UserProfile").get(Userauthentication,getUserProfileData,);
+router.route("/User/auth/UserProfile").get(Userauthentication, getUserProfileData,);
+router.route("/logout").post(authentication, logOut);
 
 
 
