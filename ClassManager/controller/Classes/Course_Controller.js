@@ -75,10 +75,18 @@ const getCourse_Proudct = asyncErrorHandler(async (req, res, next) => {
     }
   },);
 
+  const newresult = product.map(product => {
+    product.Image = `uploads/CourseProduct/${product.Image}`;
+    return product;
+  })
+
+
+
+
   res.json({
     status: true,
     message: product.length ? "Data fetched Success" : "No Data found",
-    Product: product,
+    Product: newresult,
   })
 
 });
@@ -100,7 +108,7 @@ const AddCoures = asyncErrorHandler(async (req, res, next) => {
   res.json({
     status: true,
     message: "Course created Succes",
-  
+
   });
 
 });
